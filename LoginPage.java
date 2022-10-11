@@ -15,14 +15,21 @@ public class LoginPage {
             this.userName = console.consoleInput("Enter Username: ");
             this.password = console.consoleInput("Enter Password: ");
             console.consolePrintLn("----------------------------");
+            console.consolePrintLn("Loading...Almost there...");
+            console.consolePrintLn("----------------------------");
             if(jdbc.loginReader(userName, password)){
                 console.consolePrintLn("Welcome, " + userName);
                 break;
             }
             else
                 console.consolePrintLn("Incorrect username or password. Try Again.");
-
-
-
+        }
+        console.consolePrintLn("----------------------------");
     }
-}}
+    public String getUserName(){
+        return this.userName;
+    }
+    public String getPassword(){
+        return this.password;
+    }
+}
