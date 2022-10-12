@@ -6,8 +6,10 @@ public class Console {
     private String prompt;
 
     public void consolePrintLn(String prompt){
-
         System.out.println(prompt);
+    }
+    public void consolePrintLn(){
+        System.out.println("Very much thanks for choosing this System. Come back again.\nExiting..........");
     }
     public void consolePrint(String prompt){
 
