@@ -16,6 +16,6 @@ public class Console {
     public String consoleInput(String prompt){
         Scanner scanner = new Scanner(System.in);
         System.out.print(prompt);
-        return scanner.next();
+        return scanner.nextLine();
     }
 }
