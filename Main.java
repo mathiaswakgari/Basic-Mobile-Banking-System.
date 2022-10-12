@@ -11,14 +11,14 @@ public class Main {
         var login = new LoginPage();
         var balanceConfigure = new BalanceConfigure();
         login.login();
-        String customerName = jdbc.reader("select customer_fullname from customer, users where user_name='" + login.getUserName() +"'", "customer_fullname");
+        String customerName = jdbc.reader("select customer_fullname from customer where user_name='" + login.getUserName() +"'", "customer_fullname");
         console.consolePrintLn("Full-name: " + customerName);
 
-        while (true){
+        while (true) {
             console.consolePrintLn("Options:\n1. Show Balance\n2. Make Transactions\n3. Quit");
             String choice = console.consoleInput("Your choice: ");
             console.consolePrintLn("----------------------------");
-            String balance = jdbc.reader("select balance from customer, users where user_name='" + login.getUserName() + "'", "balance");
+            String balance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
             if (Objects.equals(choice, "1")){
                 double balanceConverted = Double.parseDouble(balance);
                 balanceConfigure.balanceReader(balanceConverted);
@@ -33,6 +33,14 @@ public class Main {
                 if (amountDouble >= balanceConfigure.getBalance()){
                     console.consolePrintLn("----------------------------");
                     console.consolePrintLn("You don't have that much balance in your account. Try with legitimate amount.");
+                }
+                else{
+                    double deposit = balanceConfigure.getBalance() - amountDouble;
+                    jdbc.updater("update customer set balance = '" + deposit + "'where user_name='" + login.getUserName() + "'");
+                    console.consolePrintLn("You have deposited $" + amountDouble +".");
+                    String updatedBalance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
+                    console.consolePrintLn("Balance: $" + updatedBalance);
+                    console.consolePrintLn("----------------------------");
                 }
 
             }
