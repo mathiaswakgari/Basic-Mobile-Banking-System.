@@ -2,6 +2,7 @@ package com.mathias;
 
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class Main {
 
@@ -26,23 +27,29 @@ public class Main {
                 console.consolePrintLn("----------------------------");
             }
             else if (Objects.equals(choice, "2")){
-                String amount = console.consoleInput("Enter amount in numbers: ");
-                double amountDouble = Double.parseDouble(amount);
-                double balanceConverted = Double.parseDouble(balance);
-                balanceConfigure.balanceReader(balanceConverted);
-                if (amountDouble >= balanceConfigure.getBalance()){
-                    console.consolePrintLn("----------------------------");
-                    console.consolePrintLn("You don't have that much balance in your account. Try with legitimate amount.");
+                String toWhom = console.consoleInput("Enter recipients full-name: ");
+                if (jdbc.userReader(toWhom)){
+                    String amount = console.consoleInput("Enter amount in numbers: ");
+                    double amountDouble = Double.parseDouble(amount);
+                    double balanceConverted = Double.parseDouble(balance);
+                    balanceConfigure.balanceReader(balanceConverted);
+                    if (amountDouble >= balanceConfigure.getBalance()){
+                        console.consolePrintLn("----------------------------");
+                        console.consolePrintLn("You don't have that much balance in your account. Try with legitimate amount.");
+                    }
+                    else{
+                        double deposit = balanceConfigure.getBalance() - amountDouble;
+                        jdbc.updater("update customer set balance = '" + deposit + "'where user_name='" + login.getUserName() + "'");
+                        jdbc.updater("update customer set balance=balance + '"+ amount +"'where customer_fullname='" + toWhom+"'");
+                        console.consolePrintLn("You have deposited $" + amountDouble + " to " + toWhom + ".");
+                        String updatedBalance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
+                        console.consolePrintLn("Balance: $" + updatedBalance);
+                        console.consolePrintLn("----------------------------");
+                    }
                 }
                 else{
-                    double deposit = balanceConfigure.getBalance() - amountDouble;
-                    jdbc.updater("update customer set balance = '" + deposit + "'where user_name='" + login.getUserName() + "'");
-                    console.consolePrintLn("You have deposited $" + amountDouble +".");
-                    String updatedBalance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
-                    console.consolePrintLn("Balance: $" + updatedBalance);
-                    console.consolePrintLn("----------------------------");
+                    console.consolePrintLn("The Name provided could not be directed to any one. Try a valid name.");
                 }
-
             }
             else if(Objects.equals(choice, "3")){
                 console.consolePrintLn("Thank-you for choosing this system.\nExiting..........");
