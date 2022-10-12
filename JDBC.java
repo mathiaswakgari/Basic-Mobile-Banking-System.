@@ -22,7 +22,13 @@ public class JDBC {
         statement.executeUpdate(queries);
 
     }
+    public boolean userReader(String fullName) throws SQLException{
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mobile_banking","root","4779");
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from customer where customer_fullname='" + fullName +"'");
+        return resultSet.next();
 
+    }
 
 }
 
