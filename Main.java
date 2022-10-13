@@ -1,6 +1,7 @@
 package com.mathias;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -17,11 +18,14 @@ public class Main {
         console.consolePrintLn("Full-name: " + customerName);
 
         while (true) {
-            console.consolePrintLn("Options:\n1. Show Balance\n2. Make Transactions\n3. Quit");
+
+            console.consolePrintLn("Options:\n1. Show Balance\n2. Make Transactions\n3. Quit\n4. Show transaction history");
             String choice = console.consoleInput("Your choice: ");
             console.consolePrintLn("----------------------------");
             String balance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
+
             if (Objects.equals(choice, "1")){
+
                 double balanceConverted = Double.parseDouble(balance);
                 balanceConfigure.balanceReader(balanceConverted);
                 console.consolePrintLn("Balance: $" + new String(String.valueOf(balanceConfigure.getBalance())));
@@ -34,6 +38,7 @@ public class Main {
                 }
             }
             else if (Objects.equals(choice, "2")){
+
                 String toWhom = console.consoleInput("Enter recipient's full-name: ");
                 if (Objects.equals(toWhom, customerName)) {
                     console.consolePrintLn("Transaction Failed. Can't transfer to current account from current account.");
@@ -45,6 +50,7 @@ public class Main {
                     }
                 }
                 else{
+
                     if (jdbc.userReader(toWhom)){
                         String amount = console.consoleInput("Enter amount in numbers: ");
                         double amountDouble = Double.parseDouble(amount);
@@ -71,11 +77,22 @@ public class Main {
                     }
                     String input = console.consoleInput("Would you like to select other options(Yes(y)/No(n))?: ");
                     input = input.toLowerCase(Locale.ROOT);
-                }
+                    if (Objects.equals(input, "n")) {
+                        console.consolePrintLn();
+                        break;
+                }}
             }
             else if(Objects.equals(choice, "3")){
                 console.consolePrintLn();
                 break;
+            }
+            else if (Objects.equals(choice, "4")){
+                jdbc.transactionReader(customerName);
+                String input = console.consoleInput("Would you like to select other options(Yes(y)/No(n))?: ");
+                input = input.toLowerCase(Locale.ROOT);
+                if (Objects.equals(input, "n")) {
+                    console.consolePrintLn();
+                    break;
             }
             else{
                 console.consolePrintLn("Wrong choice, try again.");
@@ -83,4 +100,4 @@ public class Main {
         }
 
     }
-}
+}}
