@@ -59,8 +59,10 @@ public class Main {
                             jdbc.updater("update customer set balance = '" + deposit + "'where user_name='" + login.getUserName() + "'");
                             jdbc.updater("update customer set balance=balance + '"+ amount +"'where customer_fullname='" + toWhom+"'");
                             console.consolePrintLn("You have deposited $" + amountDouble + " to " + toWhom + ".");
+                            LocalDate transactionDate = LocalDate.now();
                             String updatedBalance = jdbc.reader("select balance from customer where user_name='" + login.getUserName() + "'", "balance");
                             console.consolePrintLn("Balance: $" + updatedBalance);
+                            jdbc.updater("insert into p_transaction(transaction_date, deposit_amount, customer_depositedTo, customer_depositedFrom) values ('"+transactionDate+"','" + amountDouble +"','"+toWhom+"', '"+customerName+"')");
                             console.consolePrintLn("----------------------------");
                         }
                     }
